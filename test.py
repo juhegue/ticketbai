@@ -68,10 +68,10 @@ class Testing(unittest.TestCase):
     def test_invoice(self):
         t = TicketBai(PATH)
         data = {
-            'razonSocialONombre': 'Juhegue',
-            'apellido1': 'Sin',
-            'apellido2': 'Apellidos',
-            'nif': '82611562R',
+            'razonSocialONombre': 'Yanokito',
+            'apellido1': 'Ma',
+            'apellido2': 'Kaka',
+            'nif': '51055347Q',
             'codigoPostal': '29100'
         }
         emisor = json.dumps(json.loads(temisor_factura.substitute(data)))
@@ -120,7 +120,11 @@ class Testing(unittest.TestCase):
         resul = t.put('invoice/send', factura)
         self.assertEqual(t.response.status_code, 200)
 
-        params = ['2022', 1, 'false']
+        params = ['87662841C', '2022', '1']
+        resul = t.get('invoice/get', url_list_param=params)
+        self.assertEqual(t.response.status_code, 200)
+
+        params = ['87662841C', '2022', '1', 'false']
         resul = t.post('invoice/cancel', url_list_param=params)
         self.assertEqual(t.response.status_code, 200)
 
