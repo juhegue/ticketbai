@@ -22,7 +22,7 @@ destinatario_factura = """{
     "codigoPostal": "$codigoPostal",
     "direccion": "$direccion",
     "municipio": "$municipio",
-    "destinatarioExtranjero": ${destinatario_factura_extranjero}
+    "destinatarioExtranjero": $destinatarioExtranjero
 }"""
 
 linea_factura = """{
@@ -47,9 +47,9 @@ factura = """{
     "serie": "$serie",
     "numeroFactura": $numeroFactura,
     "simplificada": $simplificada,
-    "emisor": ${emisor_factura},
-    "destinatario": ${destinatario_factura},  
-    "lineasFactura": [$lineas_factura]
+    "emisor": $emisor,
+    "destinatario": $destinatario,  
+    "lineasFactura": [$lineasFactura]
 }"""
 
 facturasRectificadasSustituidas = """{
@@ -66,8 +66,8 @@ factura_correcion = """{
     "serie": "$serie",
     "numeroFactura": $numeroFactura,
     "simplificada": $simplificada,
-    "emisor": ${emisor_factura},
-    "destinatario": ${destinatario_factura},  
+    "emisor": $emisor_factura,
+    "destinatario": $destinatario_factura,  
     "lineasFactura": [$lineas_factura]
     "facturaEmitidaSustitucionSimplificada": $facturaEmitidaSustitucionSimplificada,
     "codigoFacturaRectificativa": "$codigoFacturaRectificativa",
