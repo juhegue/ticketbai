@@ -66,7 +66,7 @@ class TicketBai:
 
         self.response = response
         if 200 <= response.status_code <= 299:
-            return json.loads(response.text)
+            return json.loads(response.text or '{}')
         else:
             print(f'ERROR ({url})= {response.status_code}:{response.reason}')
 
