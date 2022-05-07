@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import io
 import os
 import sys
 import json
@@ -9,8 +8,6 @@ import hashlib
 import pathlib
 import pickle
 import requests
-from datetime import datetime, timezone
-from templates import *
 
 """
 Entorno OpenApi: https://apipartner.ticketbai.pro/swagger/index.html
@@ -18,6 +15,8 @@ Entorno OpenApi: https://apipartner.ticketbai.pro/swagger/index.html
 
 URL_IDENTITY = 'https://login.consulpyme.com/connect/token'
 URL_TICKETBAI = 'https://apipartner.ticketbai.pro/api'
+
+logger = logging.getLogger(__name__)
 
 
 class TicketBai:
@@ -142,8 +141,3 @@ class TicketBai:
         url = f'{URL_TICKETBAI}/{funcion}'
         return self._response('put', url, json_param)
 
-
-if __name__ == '__main__':
-    t = TicketBai()
-    vat = t.get('vat/get/')
-    print(vat)

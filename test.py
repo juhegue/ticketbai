@@ -16,13 +16,13 @@ class Testing(unittest.TestCase):
         resul = t.get('vat/get/')
         self.assertEqual(t.response.status_code, 200)
 
-    @unittest.skip
+    # @unittest.skip
     def test_country(self):
         t = TicketBai(PATH)
         resul = t.get('country/get/')
         self.assertEqual(t.response.status_code, 200)
 
-    @unittest.skip
+    # @unittest.skip
     def test_customer(self):
         t = TicketBai(PATH)
         clavesIVA = ['"01"']
@@ -64,7 +64,7 @@ class Testing(unittest.TestCase):
         # resul = t.post('customer/activate', json_param=json_data)
         # self.assertEqual(t.response.status_code, 200)
 
-    @unittest.skip
+    # @unittest.skip
     def test_invoice(self):
         t = TicketBai(PATH)
         data = {
