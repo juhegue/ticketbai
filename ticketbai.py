@@ -5,6 +5,9 @@ import os
 import sys
 import json
 import logging
+import hashlib
+import pathlib
+import pickle
 import requests
 from datetime import datetime, timezone
 from templates import *
@@ -23,20 +26,69 @@ class TicketBai:
     def __init__(self, cwd=None):
         path = sys.executable if hasattr(sys, 'frozen') else sys.argv[0]
         self.path = cwd or os.path.split(path)[0]
-        self.token, self.token_type = self._get_token(self._get_config())
+        self.client_id, self.client_secret = self._get_config()
+        self.token, self.token_type = self.get_token_type()
 
     def _get_config(self):
         fic = os.path.join(self.path, 'config.json')
         with open(fic, 'rb') as f:
             data = json.load(f)
-        return data
+        return data.get('client_id'), data.get('client_secret')
 
-    def _get_token(self, config):
+    def token(self):
+        try:
+            tokens = self._get_tokens_local()
+            md5 = self._get_md5()
+            return tokens[md5]
+        except:
+            return self._get_token_identity()
+
+    @staticmethod
+    def _get_home_config():
+        home = pathlib.Path.home()
+        nombre = os.path.basename(__file__).split('.')[0]
+        fichero = os.path.join(home, f'.{nombre}')
+        return fichero
+
+    def get_token_type(self):
+        try:
+            tokens = self._get_tokens_local()
+            md5 = self._get_md5()
+            return tokens[md5]
+        except:
+            access_token, token_type = self._get_token_identity()
+            self.set_token_type(access_token, token_type)
+            return access_token, token_type
+
+    def set_token_type(self, token, type):
+        fichero = self._get_home_config()
+        try:
+            tokens = self._get_tokens_local()
+            md5 = self._get_md5()
+            tokens[md5] = token, type
+            with open(fichero, 'wb') as f:
+                pickle.dump(tokens, f)
+        except:
+            pass
+
+    def _get_tokens_local(self):
+        fichero = self._get_home_config()
+        try:
+            with open(fichero, 'rb') as f:
+                data = pickle.load(f)
+            return data
+        except:
+            return dict()
+
+    def _get_md5(self):
+        return hashlib.md5(f'{self.client_id}{self.client_secret}'.encode('utf-8')).hexdigest()
+
+    def _get_token_identity(self):
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         data = {
             'grant_type': 'client_credentials',
-            'client_id': config.get('client_id'),
-            'client_secret': config.get('client_secret'),
+            'client_id': self.client_id,
+            'client_secret': self.client_secret,
             'scope': 'api_ticketbaipro'
         }
         response = requests.post(URL_IDENTITY, headers=headers, data=data)
@@ -67,6 +119,10 @@ class TicketBai:
         self.response = response
         if 200 <= response.status_code <= 299:
             return json.loads(response.text or '{}')
+        elif response.status_code == 401:
+            access_token, token_type = self._get_token_identity()
+            self.set_token_type(access_token, token_type)
+            return self._response(tipo, url, data)
         else:
             print(f'ERROR ({url})= {response.status_code}:{response.reason}')
 

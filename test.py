@@ -11,7 +11,6 @@ PATH = '/home/juan/workspace/python/ticketbai'
 
 class Testing(unittest.TestCase):
 
-    @unittest.skip
     def test_vat(self):
         t = TicketBai(PATH)
         resul = t.get('vat/get/')
@@ -65,6 +64,7 @@ class Testing(unittest.TestCase):
         # resul = t.post('customer/activate', json_param=json_data)
         # self.assertEqual(t.response.status_code, 200)
 
+    @unittest.skip
     def test_invoice(self):
         t = TicketBai(PATH)
         data = {
