@@ -19,7 +19,7 @@ URL_TICKETBAI = 'https://apipartner.ticketbai.pro/api'
 
 
 class TicketBai:
-    response = None
+    response = dict()
 
     def __init__(self, cwd=None, usuario=None, clave=None):
         if usuario and clave:

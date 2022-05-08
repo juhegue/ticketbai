@@ -2,27 +2,44 @@
 
 import unittest
 
-import json
-from ticketbai import TicketBai
-from templates import *
+import os
+from main import Main
+
 
 PATH = '/home/juan/workspace/python/ticketbai'
 
 
+class Args:
+    cwd = PATH
+    fichero = None
+    opcion = None
+
+    def __init__(self, opcion, fichero):
+        self.log = os.path.join(PATH, 'resultado', 'ticketbai.log')
+        self.opcion = opcion
+        self.fichero = fichero
+
+
 class Testing(unittest.TestCase):
 
+    def test_vat_get(self):
+        args = Args('vat_get', os.path.join(PATH, 'resultado', 'vat_get.json'))
+        m = Main(args)
+        self.assertEqual(m.response.get('status_code'), 200)
+
+    @unittest.skip
     def test_vat(self):
         t = TicketBai(PATH)
         resul = t.get('vat/get/')
         self.assertEqual(t.response.status_code, 200)
 
-    # @unittest.skip
+    @unittest.skip
     def test_country(self):
         t = TicketBai(PATH)
         resul = t.get('country/get/')
         self.assertEqual(t.response.status_code, 200)
 
-    # @unittest.skip
+    @unittest.skip
     def test_customer(self):
         t = TicketBai(PATH)
         clavesIVA = ['"01"']
@@ -64,7 +81,7 @@ class Testing(unittest.TestCase):
         # resul = t.post('customer/activate', json_param=json_data)
         # self.assertEqual(t.response.status_code, 200)
 
-    # @unittest.skip
+    @unittest.skip
     def test_invoice(self):
         t = TicketBai(PATH)
         data = {

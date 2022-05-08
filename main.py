@@ -25,6 +25,8 @@ class Main(TicketBai):
         kwargs = dict()
         if hasattr(args, 'usuario') and hasattr(args, 'clave') and args.usuario and args.clave:
             kwargs = {'usuario': args.usuario, 'clave': args.clave}
+        if hasattr(args, 'cwd'):
+            kwargs.update({'cwd': args.cwd})
         super().__init__(**kwargs)
 
         try:
