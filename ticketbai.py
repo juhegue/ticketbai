@@ -1,38 +1,50 @@
 # -*- coding: utf-8 -*-
 
+"""
+Comunicación con TicketBai
+(juhegue vie 6 may 2022)
+Entorno OpenApi: https://apipartner.ticketbai.pro/swagger/index.html
+"""
+
 import os
 import sys
 import json
-import logging
 import hashlib
 import pathlib
 import pickle
 import requests
 
-"""
-Entorno OpenApi: https://apipartner.ticketbai.pro/swagger/index.html
-"""
-
 URL_IDENTITY = 'https://login.consulpyme.com/connect/token'
 URL_TICKETBAI = 'https://apipartner.ticketbai.pro/api'
-
-logger = logging.getLogger(__name__)
 
 
 class TicketBai:
     response = None
 
-    def __init__(self, cwd=None):
-        path = sys.executable if hasattr(sys, 'frozen') else sys.argv[0]
-        self.path = cwd or os.path.split(path)[0]
-        self.client_id, self.client_secret = self._get_config()
+    def __init__(self, cwd=None, usuario=None, clave=None):
+        if usuario and clave:
+            self.client_id = usuario
+            self.client_secret = clave
+        else:
+            path = sys.executable if hasattr(sys, 'frozen') else sys.argv[0]
+            path = cwd or os.path.split(path)[0]
+            self.client_id, self.client_secret = self._get_config(path)
+
         self.token, self.token_type = self.get_token_type()
 
-    def _get_config(self):
-        fic = os.path.join(self.path, 'config.json')
+    @staticmethod
+    def _get_config(path):
+        fic = os.path.join(path, 'config.json')
         with open(fic, 'rb') as f:
             data = json.load(f)
         return data.get('client_id'), data.get('client_secret')
+
+    @staticmethod
+    def _get_home_config():
+        home = pathlib.Path.home()
+        nombre = os.path.basename(__file__).split('.')[0]
+        fichero = os.path.join(home, f'.{nombre}')
+        return fichero
 
     def token(self):
         try:
@@ -41,13 +53,6 @@ class TicketBai:
             return tokens[md5]
         except:
             return self._get_token_identity()
-
-    @staticmethod
-    def _get_home_config():
-        home = pathlib.Path.home()
-        nombre = os.path.basename(__file__).split('.')[0]
-        fichero = os.path.join(home, f'.{nombre}')
-        return fichero
 
     def get_token_type(self):
         try:
@@ -96,8 +101,8 @@ class TicketBai:
             return resul.get('access_token'), resul.get('token_type')
         else:
             error = json.loads(response.text).get('error_description')
-            print(f'ERROR (get_token)= {response.status_code} {response.reason}:{error}')
-            quit(-1)
+            str_error = f'ERROR (get_token)= {response.status_code} {response.reason}:{error}'
+            raise Exception(str_error)
 
     def _response(self, tipo, url, data=None):
         headers = {
@@ -123,7 +128,8 @@ class TicketBai:
             self.set_token_type(access_token, token_type)
             return self._response(tipo, url, data)
         else:
-            print(f'ERROR ({url})= {response.status_code}:{response.reason}')
+            str_error = f'ERROR ({url})= {response.status_code}:{response.reason}'
+            raise Exception(str_error)
 
     def get(self, funcion, url_list_param=None):
         url = f'{URL_TICKETBAI}/{funcion}'

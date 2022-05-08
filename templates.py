@@ -2,6 +2,21 @@
 
 from string import Template
 
+
+class MiTemplate(Template):
+    """
+    Sobreescribe Template para crear la función substituye
+    que convierte False/True en false/true para json.loads
+    """
+    def substituye(self, *args, **kws):
+        if args:
+            dct = args[0]
+            for k, v in dct.items():
+                if type(v) == bool:
+                    dct[k] = str(v).lower()
+        return self.substitute(*args, **kws)
+
+
 emisor_factura = """{
     "razonSocialONombre": "$razonSocialONombre",
     "apellido1": "$apellido1",
@@ -49,7 +64,7 @@ factura = """{
     "simplificada": $simplificada,
     "emisor": $emisor,
     "destinatario": $destinatario,  
-    "lineasFactura": [$lineasFactura]
+    "lineasFactura": $lineasFactura
 }"""
 
 facturasRectificadasSustituidas = """{
@@ -66,16 +81,16 @@ factura_correcion = """{
     "serie": "$serie",
     "numeroFactura": $numeroFactura,
     "simplificada": $simplificada,
-    "emisor": $emisor_factura,
-    "destinatario": $destinatario_factura,  
-    "lineasFactura": [$lineas_factura]
     "facturaEmitidaSustitucionSimplificada": $facturaEmitidaSustitucionSimplificada,
     "codigoFacturaRectificativa": "$codigoFacturaRectificativa",
     "tipoFacturaRectificativa": "$tipoFacturaRectificativa",
     "baseRectificativa": $baseRectificativa,
     "cuotaRectificada": $cuotaRectificada,
     "cuotaRecargoRectificada": $cuotaRecargoRectificada,
-    "facturasRectificadasSustituidas": [$facturasRectificadasSustituidas]
+    "emisor": $emisor,
+    "destinatario": $destinatario,  
+    "lineasFactura": $lineasFactura,
+    "facturasRectificadasSustituidas": $facturasRectificadasSustituidas
 }"""
 
 customer = """{
@@ -88,15 +103,15 @@ customer = """{
     "direccion": "$direccion",
     "email": "$email",
     "tipoLicencia": "$tipoLicencia",
-    "clavesIVA": [$clavesIVA],
-    "tipoCertificado": "$tipoCertificado"
+    "tipoCertificado": "$tipoCertificado",
+    "clavesIVA": $clavesIVA
 }"""
 
-temisor_factura = Template(emisor_factura)
-tdestinatario_factura_extranjero = Template(destinatario_factura_extranjero)
-tdestinatario_factura = Template(destinatario_factura)
-tlinea_factura = Template(linea_factura)
-tfactura = Template(factura)
-tfacturasRectificadasSustituidas = Template(facturasRectificadasSustituidas)
-tfactura_correcion = Template(factura_correcion)
-tcustomer = Template(customer)
+temisor_factura = MiTemplate(emisor_factura)
+tdestinatario_factura_extranjero = MiTemplate(destinatario_factura_extranjero)
+tdestinatario_factura = MiTemplate(destinatario_factura)
+tlinea_factura = MiTemplate(linea_factura)
+tfactura = MiTemplate(factura)
+tfacturasRectificadasSustituidas = MiTemplate(facturasRectificadasSustituidas)
+tfactura_correcion = MiTemplate(factura_correcion)
+tcustomer = MiTemplate(customer)
