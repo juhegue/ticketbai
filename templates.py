@@ -107,6 +107,11 @@ customer = """{
     "clavesIVA": $clavesIVA
 }"""
 
+customer_activate = """{
+    "Nif": "$Nif",
+    "LicenseType": "$LicenseType"
+}"""
+
 temisor_factura = MiTemplate(emisor_factura)
 tdestinatario_factura_extranjero = MiTemplate(destinatario_factura_extranjero)
 tdestinatario_factura = MiTemplate(destinatario_factura)
@@ -115,3 +120,5 @@ tfactura = MiTemplate(factura)
 tfacturasRectificadasSustituidas = MiTemplate(facturasRectificadasSustituidas)
 tfactura_correccion = MiTemplate(factura_correccion)
 tcustomer = MiTemplate(customer)
+tcustomer_activate = MiTemplate(customer_activate)
+

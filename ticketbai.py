@@ -19,7 +19,8 @@ URL_TICKETBAI = 'https://apipartner.ticketbai.pro/api'
 
 
 class TicketBai:
-    response = dict()
+    response = None
+    status_code = None
 
     def __init__(self, cwd=None, usuario=None, clave=None):
         if usuario and clave:
@@ -121,6 +122,7 @@ class TicketBai:
             raise Exception(f'Tipo no definido: {tipo}')
 
         self.response = response
+        self.status_code = response.status_code
         if 200 <= response.status_code <= 299:
             return json.loads(response.text or '{}')
         elif response.status_code == 401:

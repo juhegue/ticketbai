@@ -10,7 +10,7 @@ import datetime
 import json
 from ticketbai import TicketBai
 from templates import (temisor_factura, tdestinatario_factura_extranjero, tdestinatario_factura, tlinea_factura,
-                       tfactura, tfacturasRectificadasSustituidas, tfactura_correccion, tcustomer)
+                       tfactura, tfacturasRectificadasSustituidas, tfactura_correccion, tcustomer, tcustomer_activate)
 
 
 __version__ = '0.0.1'
@@ -49,7 +49,7 @@ class Main(TicketBai):
 
         try:
             resul = getattr(self, self.opcion)()
-            data = json.dumps(resul, indent=4, sort_keys=True)
+            data = json.dumps(resul, ensure_ascii=False, indent=4, sort_keys=True)
         except Exception as e:
             data = f'[{datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")}] {e.__class__.__name__}: {e.args}'
 
@@ -61,9 +61,6 @@ class Main(TicketBai):
 
     def country_get(self):
         return self.get('country/get/')
-
-    def customer_list(self):
-        return self.get('customer/list/')
 
     def customer_add(self):
         with open(self.fichero, 'r', encoding='cp1252') as f:
@@ -83,6 +80,9 @@ class Main(TicketBai):
                 resul = self.put('customer/add', customer)
                 return resul
 
+    def customer_list(self):
+        return self.get('customer/list/')
+
     def customer_cancel(self):
         with open(self.fichero, 'r') as f:
             data = json.load(f)
@@ -92,6 +92,16 @@ class Main(TicketBai):
         with open(self.fichero, 'r') as f:
             data = json.load(f)
         return self.get('customer/info', data)
+
+    def customer_activate(self):
+        with open(self.fichero, 'r') as f:
+            valores = json.load(f)
+
+        keys = ['Nif', 'LicenseType']
+        data = dict(zip(keys, valores))
+        activate = json.dumps(json.loads(tcustomer_activate.substituye(data)))
+        resul = self.post('customer/activate', json_param=activate)
+        return resul
 
     def invoice_send(self):
         with open(self.fichero, 'r', encoding='cp1252') as f:
@@ -149,7 +159,7 @@ class Main(TicketBai):
             data = json.load(f)
         return self.post('invoice/cancel', url_list_param=data)
 
-    def invoice_correccion(self):
+    def invoice_correct(self):
         with open(self.fichero, 'r', encoding='cp1252') as f:
             data_str = conversion_caracter_basico(f.read())
             data = json.loads(data_str)
@@ -203,7 +213,7 @@ class Main(TicketBai):
                         'emisor', 'destinatario', 'lineasFactura', 'facturasRectificadasSustituidas']
                 data = dict(zip(keys, valores))
                 factura = json.dumps(json.loads(tfactura_correccion.substituye(data)))
-                resul = self.put('invoice/send', factura)
+                resul = self.put('invoice/correct', factura)
                 return resul
 
 
