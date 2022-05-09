@@ -3,149 +3,76 @@
 import unittest
 
 import os
+import sys
 from main import Main
 
+funcion = lambda: sys._getframe(1).f_code.co_name[5:]
 
 PATH = '/home/juan/workspace/python/ticketbai'
 
 
 class Args:
     cwd = PATH
-    fichero = None
-    opcion = None
+    log = os.path.join(PATH, 'resultado', 'ticketbai.log')
 
     def __init__(self, opcion, fichero):
-        self.log = os.path.join(PATH, 'resultado', 'ticketbai.log')
         self.opcion = opcion
         self.fichero = fichero
 
 
 class Testing(unittest.TestCase):
 
+    # @unittest.skip
     def test_vat_get(self):
-        args = Args('vat_get', os.path.join(PATH, 'resultado', 'vat_get.json'))
+        args = Args(funcion(), os.path.join(PATH, 'resultado', f'{funcion()}.json'))
         m = Main(args)
         self.assertEqual(m.response.get('status_code'), 200)
 
-    @unittest.skip
-    def test_vat(self):
-        t = TicketBai(PATH)
-        resul = t.get('vat/get/')
-        self.assertEqual(t.response.status_code, 200)
+    def test_country_get(self):
+        args = Args(funcion(), os.path.join(PATH, 'resultado', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.response.get('status_code'), 200)
 
-    @unittest.skip
-    def test_country(self):
-        t = TicketBai(PATH)
-        resul = t.get('country/get/')
-        self.assertEqual(t.response.status_code, 200)
+    def test_customer_list(self):
+        args = Args(funcion(), os.path.join(PATH, 'resultado', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.response.get('status_code'), 200)
 
-    @unittest.skip
-    def test_customer(self):
-        t = TicketBai(PATH)
-        clavesIVA = ['"01"']
-        data = {
-            'nif': '51055347Q',
-            'nombreoRazonSocial': 'Yanokito',
-            'apellido1': 'Ma',
-            'apellido2': 'Kaka',
-            'municipio': 'Cóin',
-            'codigoPostal': '29100',
-            'direccion': 'Rue Percebe13',
-            'email': 'si.@mail.com',
-            'tipoLicencia': 'Basic',
-            'clavesIVA': ','.join(clavesIVA),
-            'tipoCertificado': 'Test'
-        }
+    def test_customer_add(self):
+        args = Args(funcion(), os.path.join(PATH, 'resultado', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.response.get('status_code'), 200)
 
-        resul = tcustomer.substitute(data)
-        json_data = json.dumps(json.loads(resul))
+    def test_customer_cancel(self):
+        args = Args(funcion(), os.path.join(PATH, 'resultado', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.response.get('status_code'), 200)
 
-        resul = t.put('customer/add', json_param=json_data)
-        self.assertEqual(t.response.status_code, 200)
+    def test_customer_info(self):
+        args = Args(funcion(), os.path.join(PATH, 'resultado', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.response.get('status_code'), 200)
 
-        resul = t.post('customer/cancel', url_list_param=['51055347Q'])
-        self.assertEqual(t.response.status_code, 200)
+    def test_invoice_send(self):
+        args = Args(funcion(), os.path.join(PATH, 'resultado', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.response.get('status_code'), 200)
 
-        resul = t.get('customer/list')
-        self.assertEqual(t.response.status_code, 200)
+    def test_invoice_get(self):
+        args = Args(funcion(), os.path.join(PATH, 'resultado', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.response.get('status_code'), 200)
 
-        resul = t.get('customer/info', ['51055347Q'])
-        self.assertEqual(t.response.status_code, 200)
+    def test_invoice_cancel(self):
+        args = Args(funcion(), os.path.join(PATH, 'resultado', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.response.get('status_code'), 200)
 
-        # TODO:: esta mal, error 404
-        # data = {
-        #     'Nif': '51055347Q',
-        #     'LicenseType': 'Basic'
-        # }
-        # json_data = json.dumps(data)
-        # resul = t.post('customer/activate', json_param=json_data)
-        # self.assertEqual(t.response.status_code, 200)
-
-    @unittest.skip
-    def test_invoice(self):
-        t = TicketBai(PATH)
-        data = {
-            'razonSocialONombre': 'Yanokito',
-            'apellido1': 'Ma',
-            'apellido2': 'Kaka',
-            'nif': '51055347Q',
-            'codigoPostal': '29100'
-        }
-        emisor = json.dumps(json.loads(temisor_factura.substitute(data)))
-
-        extranjero = {}
-
-        data = {
-            'razonSocialONombreApellidos': 'Sin nombre ni apellidos',
-            'nif': '87662841C',
-            'codigoPostal': '29100',
-            'direccion': 'Sin direción',
-            'municipio': 'Coín',
-            'destinatarioExtranjero': json.dumps(extranjero)
-
-        }
-        destinatario = json.dumps(json.loads(tdestinatario_factura.substitute(data)))
-
-        data = {
-            'tipoLineaContraparteNoNacional': 'Ninguna',
-            'tipoSujecion': 'Ninguna',
-            'causaExencionSujecionYNoSujecion': 'Ninguna',
-            'concepto': 'El concepto',
-            'precioUnitario': 10,
-            'cantidad': 6,
-            'descuentoSobreBaseImponible': 0,
-            'porcentajeIva': 21,
-            'recargoEquivalencia': 'false',
-            'porcentajeRetencion': 0,
-            'claveIVA': '01'
-        }
-        linea = json.dumps(json.loads(tlinea_factura.substitute(data)))
-
-        data = {
-            'produccion': 'false',
-            'descripcion': 'Factura',
-            'fechaOperacion': '2022-05-07T00:00:00.000Z',
-            'fechaExpedicion': '2022-05-07T00:00:00.000Z',
-            'serie': '2022',
-            'numeroFactura': 1,
-            'simplificada': 'true',
-            'emisor': emisor,
-            'destinatario': destinatario,
-            'lineasFactura': linea
-        }
-        factura = json.dumps(json.loads(tfactura.substitute(data)))
-        resul = t.put('invoice/send', factura)
-        self.assertEqual(t.response.status_code, 200)
-
-        params = ['87662841C', '2022', '1']
-        resul = t.get('invoice/get', url_list_param=params)
-        self.assertEqual(t.response.status_code, 200)
-
-        params = ['87662841C', '2022', '1', 'false']
-        resul = t.post('invoice/cancel', url_list_param=params)
-        self.assertEqual(t.response.status_code, 200)
+    def test_invoice_correccion(self):
+        args = Args(funcion(), os.path.join(PATH, 'resultado', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.response.get('status_code'), 200)
 
 
 if __name__ == '__main__':
     unittest.main()
-

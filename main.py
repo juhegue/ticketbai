@@ -10,7 +10,7 @@ import datetime
 import json
 from ticketbai import TicketBai
 from templates import (temisor_factura, tdestinatario_factura_extranjero, tdestinatario_factura, tlinea_factura,
-                       tfactura, tfacturasRectificadasSustituidas, tfactura_correcion, tcustomer)
+                       tfactura, tfacturasRectificadasSustituidas, tfactura_correccion, tcustomer)
 
 
 __version__ = '0.0.1'
@@ -36,7 +36,7 @@ class Main(TicketBai):
             data = f'[{datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")}] {e.__class__.__name__}: {e.args}'
 
         with open(log, modo) as f:
-            f.write(f'{data}\n')
+            f.write(f'{self.opcion}\n{data}\n')
 
     def vat_get(self):
         return self.get('vat/get/')
@@ -119,7 +119,17 @@ class Main(TicketBai):
                 resul = self.put('invoice/send', factura)
                 return resul
 
-    def invoice_corregir(self):
+    def invoice_get(self):
+        with open(self.fichero, 'r') as f:
+            data = json.load(f)
+        return self.get('invoice/get', url_list_param=data)
+
+    def invoice_cancel(self):
+        with open(self.fichero, 'r') as f:
+            data = json.load(f)
+        return self.post('invoice/cancel', url_list_param=data)
+
+    def invoice_correccion(self):
         with open(self.fichero, 'r') as f:
             data = json.load(f)
 
@@ -171,19 +181,9 @@ class Main(TicketBai):
                         'tipoFacturaRectificativa', 'baseRectificativa', 'cuotaRectificada', 'cuotaRecargoRectificada',
                         'emisor', 'destinatario', 'lineasFactura', 'facturasRectificadasSustituidas']
                 data = dict(zip(keys, valores))
-                factura = json.dumps(json.loads(tfactura_correcion.substituye(data)))
+                factura = json.dumps(json.loads(tfactura_correccion.substituye(data)))
                 resul = self.put('invoice/send', factura)
                 return resul
-
-    def invoice_get(self):
-        with open(self.fichero, 'r') as f:
-            data = json.load(f)
-        return self.get('invoice/get', url_list_param=data)
-
-    def invoice_cancel(self):
-        with open(self.fichero, 'r') as f:
-            data = json.load(f)
-        return self.post('invoice/cancel', url_list_param=data)
 
 
 if __name__ == '__main__':

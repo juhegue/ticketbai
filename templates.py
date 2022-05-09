@@ -73,7 +73,7 @@ facturasRectificadasSustituidas = """{
     "fechaExpedicion": "$fechaExpedicion"
 }"""
 
-factura_correcion = """{
+factura_correccion = """{
     "produccion": $produccion,
     "descripcion": "$descripcion",
     "fechaOperacion": "$fechaOperacion",
@@ -113,5 +113,5 @@ tdestinatario_factura = MiTemplate(destinatario_factura)
 tlinea_factura = MiTemplate(linea_factura)
 tfactura = MiTemplate(factura)
 tfacturasRectificadasSustituidas = MiTemplate(facturasRectificadasSustituidas)
-tfactura_correcion = MiTemplate(factura_correcion)
+tfactura_correccion = MiTemplate(factura_correccion)
 tcustomer = MiTemplate(customer)
