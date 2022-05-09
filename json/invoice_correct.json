@@ -1,15 +1,13 @@
 [
-  ["Yanokito","Mas","Kaka","51055347Q","29100"],
+  ["MANUEL","BARRERA","MA","28598401V","41100"],
   [],
-  ["Sin nombre ni apellidos","87662841C","29100","Sin direción","Coín"],
+  ["Sin nombre ni apellidos","87662841C","29100","Sin direci�n","Co�n"],
   [
-    ["Ninguna","Ninguna","Ninguna","El concepto1",10,6,0,21,false,0,"01"],
+    ["Ninguna","Ninguna","Ninguna","El concepto1 rectificado",5,6,0,21,false,0,"01"],
     ["Ninguna","Ninguna","Ninguna","El concepto2",10,6,0,21,false,0,"01"]
   ],
   [
     ["2022",2,"2022-05-07T00:00:00.000Z"]
   ],
-  [false,"Factura","2022-05-07T00:00:00.000Z","2022-05-07T00:00:00.000Z","2022",2,true,
-  false,"1?","2?",0,0,0]
+  [false,"Factura","2022-05-07T00:00:00.000Z","2022-05-07T00:00:00.000Z","2022",2,true,false,"R1","S",120,25.20,0]
 ]
-

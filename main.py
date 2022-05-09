@@ -119,7 +119,7 @@ class Main(TicketBai):
                 if valores:
                     keys = ['pais', 'identificacion', 'claveIdentificacionPaísResidencia']
                     data = dict(zip(keys, valores))
-                    extranjero = json.loads(temisor_factura.substituye(data))
+                    extranjero = json.loads(tdestinatario_factura_extranjero.substituye(data))
 
             elif n == 2:
                 valores.append(json.dumps(extranjero))
@@ -213,7 +213,7 @@ class Main(TicketBai):
                         'emisor', 'destinatario', 'lineasFactura', 'facturasRectificadasSustituidas']
                 data = dict(zip(keys, valores))
                 factura = json.dumps(json.loads(tfactura_correccion.substituye(data)))
-                resul = self.put('invoice/correct', factura)
+                resul = self.post('invoice/correct', json_param=factura)
                 return resul
 
 
