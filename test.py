@@ -22,37 +22,31 @@ class Args:
 
 class Testing(unittest.TestCase):
 
-    @unittest.skip
     def test_vat_get(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
-    @unittest.skip
     def test_country_get(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
-    @unittest.skip
     def test_customer_add(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
-    @unittest.skip
     def test_customer_list(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
-    @unittest.skip
     def test_customer_cancel(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
-    @unittest.skip
     def test_customer_info(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)
@@ -64,19 +58,16 @@ class Testing(unittest.TestCase):
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
-    @unittest.skip
     def test_invoice_send(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
-    @unittest.skip
     def test_invoice_get(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
-    @unittest.skip
     def test_invoice_cancel(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)

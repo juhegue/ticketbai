@@ -48,19 +48,20 @@ class Main(TicketBai):
         super().__init__(**kwargs)
 
         try:
-            resul = getattr(self, self.opcion)()
+            status, resul = getattr(self, self.opcion)()
             data = json.dumps(resul, ensure_ascii=False, indent=4, sort_keys=True)
         except Exception as e:
+            status = 'ko'
             data = f'[{datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")}] {e.__class__.__name__}: {e.args}'
 
         with open(log, modo) as f:
-            f.write(f'{self.opcion}\n{data}\n')
+            f.write(f'{self.opcion}\n{status}\n{data}\n')
 
     def vat_get(self):
-        return self.get('vat/get/')
+        return 'ok', self.send('get', 'vat/get/')
 
     def country_get(self):
-        return self.get('country/get/')
+        return 'ok', self.send('get', 'country/get/')
 
     def customer_add(self):
         with open(self.fichero, 'r', encoding='cp1252') as f:
@@ -76,22 +77,26 @@ class Main(TicketBai):
                 keys = ['nif', 'nombreoRazonSocial', 'apellido1', 'apellido2', 'municipio', 'codigoPostal',
                         'direccion', 'email', 'tipoLicencia', 'tipoCertificado', 'clavesIVA']
                 data = dict(zip(keys, valores))
-                customer = json.dumps(json.loads(tcustomer.substituye(data)))
-                resul = self.put('customer/add', customer)
-                return resul
+                customer = json.loads(tcustomer.substituye(data))
+                resul = self.send('put', 'customer/add', param_json=customer)
+                status = 'ok' if resul.get('success') and not resul.get('errorMessage') else 'ko'
+                return status, resul
 
     def customer_list(self):
-        return self.get('customer/list/')
+        return 'ok', self.send('get', 'customer/list/')
 
     def customer_cancel(self):
         with open(self.fichero, 'r') as f:
             data = json.load(f)
-        return self.post('customer/cancel', url_list_param=data)
+        return 'ok', self.send('post', 'customer/cancel', param_url=data)
 
     def customer_info(self):
         with open(self.fichero, 'r') as f:
             data = json.load(f)
-        return self.get('customer/info', data)
+
+        resul = self.send('get', 'customer/info', param_url=data)
+        status = 'ok' if resul.get('success') and not resul.get('errorMessage') else 'ko'
+        return status, resul
 
     def customer_activate(self):
         with open(self.fichero, 'r') as f:
@@ -99,9 +104,10 @@ class Main(TicketBai):
 
         keys = ['Nif', 'LicenseType']
         data = dict(zip(keys, valores))
-        activate = json.dumps(json.loads(tcustomer_activate.substituye(data)))
-        resul = self.post('customer/activate', json_param=activate)
-        return resul
+        activate = json.loads(tcustomer_activate.substituye(data))
+        resul = self.send('post', 'customer/activate', param_data=activate)
+        status = 'ok' if resul.get('success') and not resul.get('errorMessage') else 'ko'
+        return status, resul
 
     def invoice_send(self):
         with open(self.fichero, 'r', encoding='cp1252') as f:
@@ -145,19 +151,24 @@ class Main(TicketBai):
                 keys = ['produccion', 'descripcion', 'fechaOperacion', 'fechaExpedicion', 'serie', 'numeroFactura',
                         'simplificada', 'emisor', 'destinatario', 'lineasFactura']
                 data = dict(zip(keys, valores))
-                factura = json.dumps(json.loads(tfactura.substituye(data)))
-                resul = self.put('invoice/send', factura)
-                return resul
+                factura = json.loads(tfactura.substituye(data))
+                resul = self.send('put', 'invoice/send', param_json=factura)
+                status = 'ok' if resul.get('success') and not resul.get('errrores') else 'ko'
+                return status, resul
 
     def invoice_get(self):
         with open(self.fichero, 'r') as f:
             data = json.load(f)
-        return self.get('invoice/get', url_list_param=data)
+        resul = self.send('get', 'invoice/get', param_url=data)
+        status = 'ok' if resul.get('success') and not resul.get('message') else 'ko'
+        return status, resul
 
     def invoice_cancel(self):
         with open(self.fichero, 'r') as f:
             data = json.load(f)
-        return self.post('invoice/cancel', url_list_param=data)
+        resul = self.send('post', 'invoice/cancel', param_url=data)
+        status = 'ok' if resul.get('success') and not resul.get('errrores') else 'ko'
+        return status, resul
 
     def invoice_correct(self):
         with open(self.fichero, 'r', encoding='cp1252') as f:
@@ -212,9 +223,10 @@ class Main(TicketBai):
                         'tipoFacturaRectificativa', 'baseRectificativa', 'cuotaRectificada', 'cuotaRecargoRectificada',
                         'emisor', 'destinatario', 'lineasFactura', 'facturasRectificadasSustituidas']
                 data = dict(zip(keys, valores))
-                factura = json.dumps(json.loads(tfactura_correccion.substituye(data)))
-                resul = self.post('invoice/correct', json_param=factura)
-                return resul
+                factura = json.loads(tfactura_correccion.substituye(data))
+                resul = self.send('post', 'invoice/correct', param_json=factura)
+                status = 'ok' if resul.get('success') and not resul.get('errrores') else 'ko'
+                return status, resul
 
 
 if __name__ == '__main__':

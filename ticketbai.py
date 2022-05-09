@@ -105,7 +105,7 @@ class TicketBai:
             str_error = f'ERROR (get_token)= {response.status_code} {response.reason}:{error}'
             raise Exception(str_error)
 
-    def _response(self, tipo, url, data=None):
+    def _response(self, tipo, url, param_data=None, param_json=None, param_params=None):
         headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -113,11 +113,11 @@ class TicketBai:
         }
 
         if tipo == 'get':
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, params=param_params)
         elif tipo == 'post':
-            response = requests.post(url, headers=headers, data=data or {})
+            response = requests.post(url, headers=headers, params=param_params, data=param_data, json=param_json)
         elif tipo == 'put':
-            response = requests.put(url, headers=headers, data=data or {})
+            response = requests.put(url, headers=headers, params=param_params, data=param_data, json=param_json)
         else:
             raise Exception(f'Tipo no definido: {tipo}')
 
@@ -128,24 +128,14 @@ class TicketBai:
         elif response.status_code == 401:
             access_token, token_type = self._get_token_identity()
             self.set_token_type(access_token, token_type)
-            return self._response(tipo, url, data)
+            return self._response(tipo, url, param_data, param_json, param_params)
         else:
             str_error = f'ERROR ({url})= {response.status_code}:{response.reason}'
             raise Exception(str_error)
 
-    def get(self, funcion, url_list_param=None):
+    def send(self, modo, funcion, param_url=None, param_data=None, param_json=None, param_params=None):
         url = f'{URL_TICKETBAI}/{funcion}'
-        if url_list_param:
-            url += '/' + '/'.join(url_list_param)
-        return self._response('get', url)
-
-    def post(self, funcion, url_list_param=None, json_param=None):
-        url = f'{URL_TICKETBAI}/{funcion}'
-        if url_list_param:
-            url += '/' + '/'.join(url_list_param)
-        return self._response('post', url, json_param)
-
-    def put(self, funcion, json_param):
-        url = f'{URL_TICKETBAI}/{funcion}'
-        return self._response('put', url, json_param)
+        if param_url:
+            url += '/' + '/'.join(param_url)
+        return self._response(modo, url, param_data, param_json, param_params)
 
