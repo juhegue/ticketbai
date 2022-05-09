@@ -54,7 +54,7 @@ class Main(TicketBai):
             status = 'ko'
             data = f'[{datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")}] {e.__class__.__name__}: {e.args}'
 
-        with open(log, modo) as f:
+        with open(log, modo, encoding='cp1252', errors='replace') as f:
             f.write(f'{self.opcion}\n{status}\n{data}\n')
 
     def vat_get(self):
