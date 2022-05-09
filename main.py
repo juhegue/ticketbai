@@ -16,6 +16,24 @@ from templates import (temisor_factura, tdestinatario_factura_extranjero, tdesti
 __version__ = '0.0.1'
 
 
+def conversion_caracter_basico(data):
+    for origen, destino in [
+        (chr(0xa0), chr(0xe1)),  # á
+        (chr(0x82), chr(0xe9)),  # é
+        (chr(0xa1), chr(0xed)),  # í
+        (chr(0xa2), chr(0xf3)),  # ó
+        (chr(0xa3), chr(0xfa)),  # ú
+        (chr(0xa4), chr(0xf1)),  # ñ
+        (chr(0xa5), chr(0xd1)),  # Ñ
+        (chr(0xa7), chr(0xba)),  # º
+        (chr(0xa6), chr(0xaa)),  # ª
+        (chr(0x87), chr(0xe7)),  # ç
+        (chr(0x80), chr(0xc7)),  # Ç
+    ]:
+        data = data.replace(origen, destino)
+    return data
+
+
 class Main(TicketBai):
     def __init__(self, args):
         self.fichero = args.fichero
@@ -48,8 +66,9 @@ class Main(TicketBai):
         return self.get('customer/list/')
 
     def customer_add(self):
-        with open(self.fichero, 'r') as f:
-            data = json.load(f)
+        with open(self.fichero, 'r', encoding='cp1252') as f:
+            data_str = conversion_caracter_basico(f.read())
+            data = json.loads(data_str)
 
         for n, valores in enumerate(data):
             if n == 0:
@@ -75,8 +94,9 @@ class Main(TicketBai):
         return self.get('customer/info', data)
 
     def invoice_send(self):
-        with open(self.fichero, 'r') as f:
-            data = json.load(f)
+        with open(self.fichero, 'r', encoding='cp1252') as f:
+            data_str = conversion_caracter_basico(f.read())
+            data = json.loads(data_str)
 
         for n, valores in enumerate(data):
             if n == 0:
@@ -130,8 +150,9 @@ class Main(TicketBai):
         return self.post('invoice/cancel', url_list_param=data)
 
     def invoice_correccion(self):
-        with open(self.fichero, 'r') as f:
-            data = json.load(f)
+        with open(self.fichero, 'r', encoding='cp1252') as f:
+            data_str = conversion_caracter_basico(f.read())
+            data = json.loads(data_str)
 
         for n, valores in enumerate(data):
             if n == 0:
