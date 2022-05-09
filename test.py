@@ -64,25 +64,28 @@ class Testing(unittest.TestCase):
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
-    # def test_invoice_send(self):
-    #     args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
-    #     m = Main(args)
-    #     self.assertEqual(m.status_code, 200)
-    #
-    # def test_invoice_get(self):
-    #     args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
-    #     m = Main(args)
-    #     self.assertEqual(m.status_code, 200)
-    #
-    # def test_invoice_cancel(self):
-    #     args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
-    #     m = Main(args)
-    #     self.assertEqual(m.status_code, 200)
-    #
-    # def test_invoice_correct(self):
-    #     args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
-    #     m = Main(args)
-    #     self.assertEqual(m.status_code, 200)
+    @unittest.skip
+    def test_invoice_send(self):
+        args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.status_code, 200)
+
+    @unittest.skip
+    def test_invoice_get(self):
+        args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.status_code, 200)
+
+    @unittest.skip
+    def test_invoice_cancel(self):
+        args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.status_code, 200)
+
+    def test_invoice_correct(self):
+        args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.status_code, 200)
 
 
 if __name__ == '__main__':
