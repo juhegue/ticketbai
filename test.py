@@ -22,6 +22,17 @@ class Args:
 
 class Testing(unittest.TestCase):
 
+    @unittest.skip
+    def test_certificate_add(self):
+        args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.status_code, 200)
+
+    def test_certificate_info(self):
+        args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
+        m = Main(args)
+        self.assertEqual(m.status_code, 200)
+
     def test_vat_get(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)

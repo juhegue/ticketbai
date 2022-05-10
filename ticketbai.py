@@ -105,9 +105,9 @@ class TicketBai:
             str_error = f'ERROR (get_token)= {response.status_code} {response.reason}:{error}'
             raise Exception(str_error)
 
-    def _response(self, tipo, url, param_data=None, param_json=None, param_params=None):
+    def _response(self, tipo, url, param_data=None, param_json=None, param_params=None, files=None):
         headers = {
-            'Content-Type': 'application/json',
+            # 'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization': f'{self.token_type} {self.token}'
         }
@@ -115,7 +115,7 @@ class TicketBai:
         if tipo == 'get':
             response = requests.get(url, headers=headers, params=param_params)
         elif tipo == 'post':
-            response = requests.post(url, headers=headers, params=param_params, data=param_data, json=param_json)
+            response = requests.post(url, headers=headers, params=param_params, data=param_data, json=param_json, files=files)
         elif tipo == 'put':
             response = requests.put(url, headers=headers, params=param_params, data=param_data, json=param_json)
         else:
@@ -130,12 +130,12 @@ class TicketBai:
             self.set_token_type(access_token, token_type)
             return self._response(tipo, url, param_data, param_json, param_params)
         else:
-            str_error = f'ERROR ({url})= {response.status_code}:{response.reason}'
+            str_error = f'ERROR ({url})= {response.status_code}:{response.reason}{response.text}'
             raise Exception(str_error)
 
-    def send(self, modo, funcion, param_url=None, param_data=None, param_json=None, param_params=None):
+    def send(self, modo, funcion, param_url=None, param_data=None, param_json=None, param_params=None, files=None):
         url = f'{URL_TICKETBAI}/{funcion}'
         if param_url:
             url += '/' + '/'.join(param_url)
-        return self._response(modo, url, param_data, param_json, param_params)
+        return self._response(modo, url, param_data, param_json, param_params, files=files)
 
