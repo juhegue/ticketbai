@@ -80,10 +80,10 @@ class Main(TicketBai):
         return status, resul
 
     def vat_get(self):
-        return 'ok', self.send('get', 'vat/get/')
+        return 'ok', self.send('get', 'vat/get')
 
     def country_get(self):
-        return 'ok', self.send('get', 'country/get/')
+        return 'ok', self.send('get', 'country/get')
 
     def customer_add(self):
         with open(self.fichero, 'r', encoding='cp1252') as f:
@@ -105,7 +105,7 @@ class Main(TicketBai):
                 return status, resul
 
     def customer_list(self):
-        return 'ok', self.send('get', 'customer/list/')
+        return 'ok', self.send('get', 'customer/list')
 
     def customer_cancel(self):
         with open(self.fichero, 'r') as f:

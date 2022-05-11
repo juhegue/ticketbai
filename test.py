@@ -28,6 +28,7 @@ class Testing(unittest.TestCase):
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
+    @unittest.skip
     def test_certificate_info(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)
@@ -63,7 +64,6 @@ class Testing(unittest.TestCase):
         m = Main(args)
         self.assertEqual(m.status_code, 200)
 
-    @unittest.skip  # TODO:: esta mal da un 400
     def test_customer_activate(self):
         args = Args(funcion(), os.path.join(PATH, 'json', f'{funcion()}.json'))
         m = Main(args)
