@@ -150,11 +150,13 @@ class Main(TicketBai):
                     extranjero = json.loads(tdestinatario_factura_extranjero.substituye(data))
 
             elif n == 2:
-                valores.append(json.dumps(extranjero))
-                keys = ['razonSocialONombreApellidos', 'nif', 'codigoPostal', 'direccion', 'municipio',
-                        'destinatarioExtranjero']
-                data = dict(zip(keys, valores))
-                destinatario = json.loads(tdestinatario_factura.substituye(data))
+                destinatario = dict()
+                if valores:
+                    valores.append(json.dumps(extranjero))
+                    keys = ['razonSocialONombreApellidos', 'nif', 'codigoPostal', 'direccion', 'municipio',
+                            'destinatarioExtranjero']
+                    data = dict(zip(keys, valores))
+                    destinatario = json.loads(tdestinatario_factura.substituye(data))
 
             elif n == 3:
                 lineas = list()
@@ -211,11 +213,13 @@ class Main(TicketBai):
                     extranjero = json.loads(temisor_factura.substituye(data))
 
             elif n == 2:
-                valores.append(json.dumps(extranjero))
-                keys = ['razonSocialONombreApellidos', 'nif', 'codigoPostal', 'direccion', 'municipio',
-                        'destinatarioExtranjero']
-                data = dict(zip(keys, valores))
-                destinatario = json.loads(tdestinatario_factura.substituye(data))
+                destinatario = dict()
+                if valores:
+                    valores.append(json.dumps(extranjero))
+                    keys = ['razonSocialONombreApellidos', 'nif', 'codigoPostal', 'direccion', 'municipio',
+                            'destinatarioExtranjero']
+                    data = dict(zip(keys, valores))
+                    destinatario = json.loads(tdestinatario_factura.substituye(data))
 
             elif n == 3:
                 lineas = list()
