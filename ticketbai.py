@@ -24,21 +24,24 @@ def response_log(func):
         if hasattr(obj, 'log'):
             with open(obj.log, 'a', encoding='cp1252', errors='replace') as f:
                 djson = json.dumps(args[3], ensure_ascii=False, indent=4, sort_keys=True) if args[3] else None
-                files = args[5].keys if args[5] else None
+                files = ','.join(args[5].keys) if args[5] else None
                 f.write(f'{args[0].upper()}: {args[1]}\n')
                 f.write(f'data: {args[2]}\n')
                 f.write(f'json: {djson}\n')
                 f.write(f'param: {args[4]}\n')
                 f.write(f'files: {files}\n')
 
-        resul = func(obj, *args, **kwargs)
+        error, resul = func(obj, *args, **kwargs)
 
         if hasattr(obj, 'log'):
             with open(obj.log, 'a', encoding='cp1252', errors='replace') as f:
-                djson = json.dumps(resul, ensure_ascii=False, indent=4, sort_keys=True)
-                f.write(f'Response:{djson}\n')
+                if error:
+                    f.write(f'Error:{error}\n')
+                else:
+                    djson = json.dumps(resul, ensure_ascii=False, indent=4, sort_keys=True)
+                    f.write(f'Response:{djson}\n')
 
-        return resul
+        return error, resul
 
     return wrapper
 
@@ -146,23 +149,28 @@ class TicketBai:
         elif tipo == 'put':
             response = requests.put(url, headers=headers, params=param_params, data=param_data, json=param_json)
         else:
-            raise Exception(f'Tipo no definido: {tipo}')
+            return f'Tipo no definido: {tipo}', None
 
         self.response = response
         self.status_code = response.status_code
         if 200 <= response.status_code <= 299:
-            return json.loads(response.text or '{}')
+            return None, json.loads(response.text or '{}')
         elif response.status_code == 401:
             access_token, token_type = self._get_token_identity()
             self.set_token_type(access_token, token_type)
             return self._response(tipo, url, param_data, param_json, param_params)
         else:
             str_error = f'ERROR ({url})= {response.status_code}:{response.reason}{response.text}'
-            raise Exception(str_error)
+            return str_error, None
 
     def send(self, modo, funcion, param_url=None, param_data=None, param_json=None, param_params=None, files=None):
         url = f'{URL_TICKETBAI}/{funcion}'
         if param_url:
             url += '/' + '/'.join(param_url)
-        return self._response(modo, url, param_data, param_json, param_params, files)
+
+        error, resul = self._response(modo, url, param_data, param_json, param_params, files)
+        if error:
+            raise Exception(error)
+
+        return resul
 
