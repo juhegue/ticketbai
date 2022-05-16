@@ -8,10 +8,10 @@ Envio factura a TicketBai
 import argparse
 import datetime
 import json
-from ticketbai import TicketBai
+from ticketbai import TicketBai, ResponseError
 from templates import (temisor_factura, tdestinatario_factura_extranjero, tdestinatario_factura, tlinea_factura,
                        tfactura, tfacturasRectificadasSustituidas, tfactura_correccion, tcustomer, tcustomer_activate)
-
+import traceback
 
 __version__ = '0.0.1'
 
@@ -52,9 +52,12 @@ class Main(TicketBai):
         try:
             status, resul = getattr(self, self.opcion)()
             data = json.dumps(resul, ensure_ascii=False, indent=4, sort_keys=True)
+        except ResponseError as e:
+            status = 'ko'
+            data = str(e)
         except Exception as e:
             status = 'ko'
-            data = f'[{datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")}] {e.__class__.__name__}: {e.args}'
+            data = f'[{datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")}] {traceback.format_exc()}'
 
         with open(fresul, modo, encoding='cp1252', errors='replace') as f:
             f.write(f'{self.opcion}\n{status}\n{data}\n')

@@ -18,6 +18,15 @@ URL_IDENTITY = 'https://login.consulpyme.com/connect/token'
 URL_TICKETBAI = 'https://apipartner.ticketbai.pro/api'
 
 
+class ResponseError(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+    def __str__(self):
+        return self.message
+
+
 def response_log(func):
 
     def wrapper(obj, *args, **kwargs):
@@ -36,7 +45,7 @@ def response_log(func):
         if hasattr(obj, 'log'):
             with open(obj.log, 'a', encoding='cp1252', errors='replace') as f:
                 if error:
-                    f.write(f'Error:{error}\n')
+                    f.write(f'{error}\n')
                 else:
                     djson = json.dumps(resul, ensure_ascii=False, indent=4, sort_keys=True)
                     f.write(f'Response:{djson}\n')
@@ -149,7 +158,7 @@ class TicketBai:
         elif tipo == 'put':
             response = requests.put(url, headers=headers, params=param_params, data=param_data, json=param_json)
         else:
-            return f'Tipo no definido: {tipo}', None
+            return f'ERROR=Tipo no definido: {tipo}', None
 
         self.response = response
         self.status_code = response.status_code
@@ -160,7 +169,7 @@ class TicketBai:
             self.set_token_type(access_token, token_type)
             return self._response(tipo, url, param_data, param_json, param_params)
         else:
-            str_error = f'ERROR ({url})= {response.status_code}:{response.reason}{response.text}'
+            str_error = f'ERROR({url})= {response.status_code}:{response.reason}{response.text}'
             return str_error, None
 
     def send(self, modo, funcion, param_url=None, param_data=None, param_json=None, param_params=None, files=None):
@@ -170,7 +179,7 @@ class TicketBai:
 
         error, resul = self._response(modo, url, param_data, param_json, param_params, files)
         if error:
-            raise Exception(error)
+            raise ResponseError(error)
 
         return resul
 
