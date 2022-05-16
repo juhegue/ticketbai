@@ -14,6 +14,7 @@ PATH = '/home/juan/workspace/python/ticketbai'
 class Args:
     cwd = PATH
     log = os.path.join('/tmp', 'ticketbai.log')
+    resul = os.path.join('/tmp', 'ticketbai.txt')
 
     def __init__(self, opcion, fichero):
         self.opcion = opcion

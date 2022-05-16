@@ -18,11 +18,37 @@ URL_IDENTITY = 'https://login.consulpyme.com/connect/token'
 URL_TICKETBAI = 'https://apipartner.ticketbai.pro/api'
 
 
+def response_log(func):
+
+    def wrapper(obj, *args, **kwargs):
+        if hasattr(obj, 'log'):
+            with open(obj.log, 'a', encoding='cp1252', errors='replace') as f:
+                djson = json.dumps(args[3], ensure_ascii=False, indent=4, sort_keys=True) if args[3] else None
+                files = args[5].keys if args[5] else None
+                f.write(f'{args[0].upper()}: {args[1]}\n')
+                f.write(f'data: {args[2]}\n')
+                f.write(f'json: {djson}\n')
+                f.write(f'param: {args[4]}\n')
+                f.write(f'files: {files}\n')
+
+        resul = func(obj, *args, **kwargs)
+
+        if hasattr(obj, 'log'):
+            with open(obj.log, 'a', encoding='cp1252', errors='replace') as f:
+                djson = json.dumps(resul, ensure_ascii=False, indent=4, sort_keys=True)
+                f.write(f'Response:{djson}\n')
+
+        return resul
+
+    return wrapper
+
+
 class TicketBai:
     response = None
     status_code = None
 
-    def __init__(self, cwd=None, usuario=None, clave=None):
+    def __init__(self, cwd=None, usuario=None, clave=None, log=None):
+        self.log = log
         if usuario and clave:
             self.client_id = usuario
             self.client_secret = clave
@@ -105,6 +131,7 @@ class TicketBai:
             str_error = f'ERROR (get_token)= {response.status_code} {response.reason}:{error}'
             raise Exception(str_error)
 
+    @response_log
     def _response(self, tipo, url, param_data=None, param_json=None, param_params=None, files=None):
         headers = {
             # 'Content-Type': 'application/json',
@@ -137,5 +164,5 @@ class TicketBai:
         url = f'{URL_TICKETBAI}/{funcion}'
         if param_url:
             url += '/' + '/'.join(param_url)
-        return self._response(modo, url, param_data, param_json, param_params, files=files)
+        return self._response(modo, url, param_data, param_json, param_params, files)
 

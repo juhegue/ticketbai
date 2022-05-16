@@ -38,13 +38,15 @@ class Main(TicketBai):
     def __init__(self, args):
         self.fichero = args.fichero
         self.opcion = args.opcion
-        log, modo = (args.log, 'a') if hasattr(args, 'log') and args.log else (args.fichero, 'w')
+        fresul, modo = (args.resul, 'a') if hasattr(args, 'resul') and args.resul else (args.fichero, 'w')
 
         kwargs = dict()
         if hasattr(args, 'usuario') and hasattr(args, 'clave') and args.usuario and args.clave:
             kwargs = {'usuario': args.usuario, 'clave': args.clave}
         if hasattr(args, 'cwd'):
             kwargs.update({'cwd': args.cwd})
+        if hasattr(args, 'log'):
+            kwargs.update({'log': args.log})
         super().__init__(**kwargs)
 
         try:
@@ -54,7 +56,7 @@ class Main(TicketBai):
             status = 'ko'
             data = f'[{datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")}] {e.__class__.__name__}: {e.args}'
 
-        with open(log, modo, encoding='cp1252', errors='replace') as f:
+        with open(fresul, modo, encoding='cp1252', errors='replace') as f:
             f.write(f'{self.opcion}\n{status}\n{data}\n')
 
     def certificate_add(self):
@@ -262,6 +264,7 @@ if __name__ == '__main__':
     parser.add_argument('-u', '--usuario', dest='usuario', type=str, help='Usuario', required=False)
     parser.add_argument('-c', '--clave', dest='clave', type=str, help='Clave', required=False)
     parser.add_argument('-l', '--log', dest='log', type=str, help='Fichero log', required=False)
+    parser.add_argument('-r', '--resultado', dest='resul', type=str, help='Fichero resultado', required=False)
     parser.add_argument('-f', '--fichero', dest='fichero', type=str, help='Fichero de datos (log si no se informa)', required=True)
     parser.add_argument('-o', '--opcion', dest='opcion', type=str, help='Opción a ejecutar', required=True)
     Main(parser.parse_args())
