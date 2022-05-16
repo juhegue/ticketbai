@@ -147,9 +147,11 @@ class Main(TicketBai):
             elif n == 1:
                 extranjero = dict()
                 if valores:
-                    keys = ['pais', 'identificacion', 'claveIdentificacionPaísResidencia']
+                    keys = ['pais', 'identificacion', 'claveIdentificacionPaisResidencia']
                     data = dict(zip(keys, valores))
-                    extranjero = json.loads(tdestinatario_factura_extranjero.substituye(data))
+                    str = tdestinatario_factura_extranjero.substituye(data).\
+                        replace('claveIdentificacionPaisResidencia', f'claveIdentificacionPa{chr(0xed)}sResidencia')
+                    extranjero = json.loads(str)
 
             elif n == 2:
                 destinatario = dict()

@@ -28,7 +28,7 @@ emisor_factura = """{
 destinatario_factura_extranjero = """{
     "pais": "$pais",
     "identificacion": "$identificacion",
-    "claveIdentificacionPaísResidencia": "$claveIdentificacionPaísResidencia"
+    "claveIdentificacionPaisResidencia": "$claveIdentificacionPaisResidencia"
 }"""
 
 destinatario_factura = """{
