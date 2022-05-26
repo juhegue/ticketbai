@@ -60,6 +60,7 @@ class TicketBai:
     status_code = None
 
     def __init__(self, cwd=None, usuario=None, clave=None, log=None):
+        self.error401 = False
         self.log = log
         if usuario and clave:
             self.client_id = usuario
@@ -164,10 +165,11 @@ class TicketBai:
         self.status_code = response.status_code
         if 200 <= response.status_code <= 299:
             return None, json.loads(response.text or '{}')
-        elif response.status_code == 401:
+        elif response.status_code == 401 and not self.error401:
+            self.error401 = True
             access_token, token_type = self._get_token_identity()
             self.set_token_type(access_token, token_type)
-            return self._response(tipo, url, param_data, param_json, param_params)
+            return self._response(tipo, url, param_data, param_json, param_params, files)
         else:
             str_error = f'ERROR({url})= {response.status_code}:{response.reason}{response.text}'
             return str_error, None
