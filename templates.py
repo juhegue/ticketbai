@@ -25,13 +25,21 @@ emisor_factura = """{
     "codigoPostal": "$codigoPostal"
 }"""
 
+destinatario_factura = """{
+    "razonSocialONombreApellidos": "$razonSocialONombreApellidos",
+    "nif": "$nif",
+    "codigoPostal": "$codigoPostal",
+    "direccion": "$direccion",
+    "municipio": "$municipio"
+}"""
+
 destinatario_factura_extranjero = """{
     "pais": "$pais",
     "identificacion": "$identificacion",
     "claveIdentificacionPaisResidencia": "$claveIdentificacionPaisResidencia"
 }"""
 
-destinatario_factura = """{
+destinatario_facturaex = """{
     "razonSocialONombreApellidos": "$razonSocialONombreApellidos",
     "nif": "$nif",
     "codigoPostal": "$codigoPostal",
@@ -113,8 +121,9 @@ customer_activate = """{
 }"""
 
 temisor_factura = MiTemplate(emisor_factura)
-tdestinatario_factura_extranjero = MiTemplate(destinatario_factura_extranjero)
 tdestinatario_factura = MiTemplate(destinatario_factura)
+tdestinatario_factura_extranjero = MiTemplate(destinatario_factura_extranjero)
+tdestinatario_facturaex = MiTemplate(destinatario_facturaex)
 tlinea_factura = MiTemplate(linea_factura)
 tfactura = MiTemplate(factura)
 tfacturasRectificadasSustituidas = MiTemplate(facturasRectificadasSustituidas)

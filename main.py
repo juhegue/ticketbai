@@ -9,8 +9,9 @@ import argparse
 import datetime
 import json
 from ticketbai import TicketBai, ResponseError
-from templates import (temisor_factura, tdestinatario_factura_extranjero, tdestinatario_factura, tlinea_factura,
-                       tfactura, tfacturasRectificadasSustituidas, tfactura_correccion, tcustomer, tcustomer_activate)
+from templates import (temisor_factura, tdestinatario_factura, tdestinatario_factura_extranjero,
+                       tdestinatario_facturaex, tlinea_factura, tfactura, tfacturasRectificadasSustituidas,
+                       tfactura_correccion, tcustomer, tcustomer_activate)
 import traceback
 
 __version__ = '0.0.1'
@@ -157,11 +158,14 @@ class Main(TicketBai):
                     extranjero = json.loads(str)
 
             elif n == 2:
-                destinatario = dict()
-                if valores:
+                if extranjero:
                     valores.append(json.dumps(extranjero))
                     keys = ['razonSocialONombreApellidos', 'nif', 'codigoPostal', 'direccion', 'municipio',
                             'destinatarioExtranjero']
+                    data = dict(zip(keys, valores))
+                    destinatario = json.loads(tdestinatario_facturaex.substituye(data))
+                else:
+                    keys = ['razonSocialONombreApellidos', 'nif', 'codigoPostal', 'direccion', 'municipio']
                     data = dict(zip(keys, valores))
                     destinatario = json.loads(tdestinatario_factura.substituye(data))
 
@@ -220,11 +224,14 @@ class Main(TicketBai):
                     extranjero = json.loads(temisor_factura.substituye(data))
 
             elif n == 2:
-                destinatario = dict()
-                if valores:
+                if extranjero:
                     valores.append(json.dumps(extranjero))
                     keys = ['razonSocialONombreApellidos', 'nif', 'codigoPostal', 'direccion', 'municipio',
                             'destinatarioExtranjero']
+                    data = dict(zip(keys, valores))
+                    destinatario = json.loads(tdestinatario_facturaex.substituye(data))
+                else:
+                    keys = ['razonSocialONombreApellidos', 'nif', 'codigoPostal', 'direccion', 'municipio']
                     data = dict(zip(keys, valores))
                     destinatario = json.loads(tdestinatario_factura.substituye(data))
 
