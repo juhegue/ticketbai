@@ -261,8 +261,8 @@ class Main(TicketBai):
                 valores.append(json.dumps(rectificadas))
                 keys = ['produccion', 'descripcion', 'fechaOperacion', 'fechaExpedicion', 'serie', 'numeroFactura',
                         'simplificada', 'facturaEmitidaSustitucionSimplificada', 'codigoFacturaRectificativa',
-                        'tipoFacturaRectificativa', 'baseRectificativa', 'cuotaRectificada', 'cuotaRecargoRectificada',
-                        'emisor', 'destinatario', 'lineasFactura', 'facturasRectificadasSustituidas']
+                        'tipoFacturaRectificativa', 'emisor', 'destinatario', 'lineasFactura',
+                        'facturasRectificadasSustituidas']
                 data = dict(zip(keys, valores))
                 factura = json.loads(tfactura_correccion.substituye(data))
                 resul = self.send('post', 'invoice/correct', param_json=factura)

@@ -33,7 +33,7 @@ def response_log(func):
         if hasattr(obj, 'log'):
             with open(obj.log, 'a', encoding='cp1252', errors='replace') as f:
                 djson = json.dumps(args[3], ensure_ascii=False, indent=4, sort_keys=True) if args[3] else None
-                files = ','.join(args[5].keys) if args[5] else None
+                files = ','.join(args[5].keys()) if args[5] else None
                 f.write(f'{args[0].upper()}: {args[1]}\n')
                 f.write(f'data: {args[2]}\n')
                 f.write(f'json: {djson}\n')
