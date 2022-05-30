@@ -167,8 +167,8 @@ class TicketBai:
             return None, json.loads(response.text or '{}')
         elif response.status_code == 401 and not self.error401:
             self.error401 = True
-            access_token, token_type = self._get_token_identity()
-            self.set_token_type(access_token, token_type)
+            self.token, self.token_type = self._get_token_identity()
+            self.set_token_type(self.token, self.token_type)
             return self._response(tipo, url, param_data, param_json, param_params, files)
         else:
             str_error = f'ERROR({url})= {response.status_code}:{response.reason}{response.text}'
