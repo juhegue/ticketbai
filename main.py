@@ -70,12 +70,9 @@ class Main(TicketBai):
         param_data = {'Password': data[0]}
 
         with open(data[1], 'rb') as f:
-            file = f.read()
-        files = {'Certificate': file}
-
-        param_url = [data[2]] if len(data) == 3 else None  # si hay nif
-
-        return 'ok', self.send('post', 'certificate/add', param_data=param_data, files=files, param_url=param_url)
+            files = {'Certificate': f}
+            param_url = [data[2]] if len(data) == 3 else None  # si hay nif
+            return 'ok', self.send('post', 'certificate/add', param_data=param_data, files=files, param_url=param_url)
 
     def certificate_info(self):
         with open(self.fichero, 'r') as f:
