@@ -182,21 +182,21 @@ class Main(TicketBai):
                 data = dict(zip(keys, valores))
                 factura = json.loads(tfactura.substituye(data))
                 resul = self.send('put', 'invoice/send', param_json=factura)
-                status = 'ok' if resul.get('success') and not resul.get('errrores') else 'ko'
+                status = 'ok' if resul.get('success') and not resul.get('errrores') and resul.get('qr') else 'ko'
                 return status, resul
 
     def invoice_get(self):
         with open(self.fichero, 'r') as f:
             data = json.load(f)
         resul = self.send('get', 'invoice/get', param_url=data)
-        status = 'ok' if resul.get('success') and not resul.get('message') else 'ko'
+        status = 'ok' if resul.get('success') and not resul.get('message') and resul.get('qr') else 'ko'
         return status, resul
 
     def invoice_cancel(self):
         with open(self.fichero, 'r') as f:
             data = json.load(f)
         resul = self.send('post', 'invoice/cancel', param_url=data)
-        status = 'ok' if resul.get('success') and not resul.get('errrores') else 'ko'
+        status = 'ok' if resul.get('success') and not resul.get('errrores') and resul.get('qr') else 'ko'
         return status, resul
 
     def invoice_correct(self):
@@ -257,7 +257,7 @@ class Main(TicketBai):
                 data = dict(zip(keys, valores))
                 factura = json.loads(tfactura_correccion.substituye(data))
                 resul = self.send('post', 'invoice/correct', param_json=factura)
-                status = 'ok' if resul.get('success') and not resul.get('errrores') else 'ko'
+                status = 'ok' if resul.get('success') and not resul.get('errrores') and resul.get('qr') else 'ko'
                 return status, resul
 
 
